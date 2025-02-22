@@ -1,12 +1,70 @@
+import React from 'react';
+import { Routes, Route } from 'react-router-dom';
+import { useAuth } from './context/AuthProvider';
+import AuthComponent from './components/Auth';
+import ProtectedRoute from './components/ProtectedRoute';
+import Dashboard from './pages/Dashboard';
+import Books from './pages/Books';
+import Members from './pages/Members';
+import Transactions from './pages/Transactions';
+import Navigation from './components/Navigation';
+import Footer from './components/Footer';
 import './index.css';
 
-const App = () => {
+function App(): JSX.Element {
+  const { signOut, user } = useAuth();
+
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 text-gray-900">
-      <h1 className="text-4xl font-bold mb-4">Welcome to New App</h1>
-      <p className="text-lg">It's great to be here.</p>
+    <div className="min-h-screen flex flex-col">
+      <Navigation signOut={signOut} user={user} />
+      <div className="flex-grow">
+        <Routes>
+          <Route path="/auth" element={<AuthComponent />} />
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/books"
+            element={
+              <ProtectedRoute>
+                <Books />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/members"
+            element={
+              <ProtectedRoute>
+                <Members />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/transactions"
+            element={
+              <ProtectedRoute>
+                <Transactions />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="*"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </div>
+      <Footer />
     </div>
   );
-};
+}
 
 export default App;
